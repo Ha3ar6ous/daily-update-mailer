@@ -1,6 +1,6 @@
-# 🌅 Tech Digest — Thursday, May 28, 2026
+# 🌅 Tech Digest — Friday, May 29, 2026
 
-> Auto-generated daily briefing · 311 articles collected
+> Auto-generated daily briefing · 161 articles collected
 
 ---
 
@@ -8,121 +8,117 @@
 
 > The highest-signal stories across all categories today.
 
-**1. [Krasis update: Qwen3.6-35B-A3B (Q4) at reading speed, 1x 8GB 3070 Mobile laptop (32GB RAM)](https://www.reddit.com/r/LocalLLaMA/comments/1tpyqng/krasis_update_qwen3635ba3b_q4_at_reading_speed_1x/)**
-*🤖 AI & Machine Learning · r/LocalLLaMA · 3.2h ago*
+**1. [Name That Toon Contest](https://www.darkreading.com/events/celebrate-20-years-of-dark-reading-name-that-toon-contest)**
+*🔐 Cybersecurity · Dark Reading · -676.8h ago*
 
-Context Krasis is an LLM runtime for running models that don't fit into VRAM. Krasis streams the model through VRAM from system RAM efficiently and handles prefill and decode as separate architectures and optimised usecases. Latest results (v1.0 release) 1x Laptop RTX 3070 Mobile 8GB, (35B param, Q4) Qwen3.6-35B-A3B (H…
+**2. [EvoRepair: Enhancing Vulnerability Repair Agents Through Experience-Based Self-Evolution](https://arxiv.org/abs/2605.30105)**
+*🤖 AI & Machine Learning · arXiv cs.SE · 2.2h ago*
 
-
-**2. [Benchmarks are Not Enough: RAMP for Runtime Assessing of Agentic Models in Production Systems](https://arxiv.org/abs/2605.27492)**
-*🤖 AI & Machine Learning · arXiv cs.SE · 8.9h ago*
-
-arXiv:2605.27492v1 Announce Type: new Abstract: LLM agents are rapidly evolving from coding assistants into autonomous software engineering systems. However, existing evaluation methodologies remain largely centered on static, isolated, and short-horizon benchmarks that fail to capture the dynamic complexity of real-wo…
+arXiv:2605.30105v1 Announce Type: new Abstract: Large Language Models (LLMs) have shown promise for automated vulnerability repair (AVR), but they still face several limitations, including the lack of intra-vulnerability experience accumulation and the lack of cross-vulnerability experience reuse. As a result, LLMs may…
 
 
-**3. [DeltaMCP: Incremental Regeneration via Spec-Aware Transformation for MCP servers](https://arxiv.org/abs/2605.28148)**
-*🤖 AI & Machine Learning · arXiv cs.SE · 8.9h ago*
+**3. [Towards Demystifying and Repairing LLM-in-the-Loop Vulnerabilities](https://arxiv.org/abs/2605.28893)**
+*🤖 AI & Machine Learning · arXiv cs.SE · 2.2h ago*
 
-arXiv:2605.28148v1 Announce Type: new Abstract: The rapid development of LLMs coupled with the introduction of Model Context Protocol (MCP) has revolutionized how intelligent agents interact with APIs through deterministic and structured methods \cite{ModelContextProtocolIntro2025}. While some existing systems like Aut…
+arXiv:2605.28893v1 Announce Type: new Abstract: Large Language Models(LLMs) have been actively integrated into modern software systems as critical components. LLM-in-the-loop vulnerabilities, where vulnerabilities are introduced by LLMs and their dependent downstream components, such as frameworks, introduce new risks.…
 
 
 ---
 
 ## ⚙️ Software Engineering
 
-**1.** **[Apache Fory Serialization 1.0.0 Released Now](https://www.reddit.com/r/programming/comments/1tpz0os/apache_fory_serialization_100_released_now/)**
-  `r/programming` · 2.9h ago
-  Apache Fory is a blazingly fast multi-language serialization framework for idiomatic domain objects, schema IDL, and cross-language data exchange. Key Features For 1.0 Release: Unified xlang type system and xlang is default serialization mode now across java/python/c++/rust/go/c#…
+**1.** **[Slack AI: The Path to Multi-Cloud](https://slack.engineering/slack-ai-the-path-to-multi-cloud/)**
+  `Slack Engineering` · 15.9h ago
+  In early 2023, Slack faced a foundational challenge: serving Large Language Models (LLMs) at enterprise scale with the security, reliability, and performance our customers expect. Over three years, we evolved from basic infrastructure to orchestrating a sophisticated multi-cloud …
 
-**2.** **[Five frontier LLMs disagree on 67% of 1k real-world fact-check claims](https://lenz.io/research/llm-disagreement)**
-  `Hacker News` · 0.5h ago
+**2.** **[GitHub bans security researcher who posted zero-day Windows exploits](https://www.tomshardware.com/tech-industry/cyber-security/microsofts-github-bans-security-researcher-who-posted-zero-day-windows-exploits-because-company-ruined-their-life-expert-claims-action-is-vindictive-and-promises-further-retaliation)**
+  `Hacker News` · 8.4h ago
   Comments
 
-**3.** **[AMD pulls a bait-and-switch on Linux users with Vivado licensing changes](https://itsfoss.com/news/amd-vivado-bait-and-switch-on-linux-users/)**
-  `Hacker News` · 1.9h ago
+**3.** **[The find out stage of AI is just supply chain and password protection​​​​‌﻿‍﻿​‍​‍‌‍﻿﻿‌﻿​‍‌‍‍‌‌‍‌﻿‌‍‍‌‌‍﻿‍​‍​‍​﻿‍‍​‍​‍‌﻿​﻿‌‍​‌‌‍﻿‍‌‍‍‌‌﻿‌​‌﻿‍‌​‍﻿‍‌‍‍‌‌‍﻿﻿​‍​‍​‍﻿​​‍​‍‌‍‍​‌﻿​‍‌‍‌‌‌‍‌‍​‍​‍​﻿‍‍​‍​‍‌‍‍​‌﻿‌​‌﻿‌​‌﻿​​‌﻿​﻿​﻿‍‍​‍﻿﻿​‍﻿﻿‌‍​﻿‌‍﻿‌‌﻿​﻿​‍﻿‍‌﻿​﻿‌﻿‌​‌‍​‌‌‍​﻿‌‍‍﻿‌‍﻿﻿‌﻿‌‍‌‍‌‌‌﻿​‍‌‍‌‍‌‍﻿​‌‍﻿﻿‌﻿‌﻿​‍﻿‍‌‍​﻿‌‍﻿﻿​‍﻿﻿‌‍‍‌‌‍﻿‍‌﻿‌​‌‍‌‌‌‍﻿‍‌﻿‌​​‍﻿﻿‌‍‌‌‌‍‌​‌‍‍‌‌﻿‌​​‍﻿﻿‌‍﻿‌‌‍﻿﻿‌‍‌​‌‍‌‌​﻿﻿‌‌﻿​​‌﻿​‍‌‍‌‌‌﻿​﻿‌‍‌‌‌‍﻿‍‌﻿‌​‌‍​‌‌﻿‌​‌‍‍‌‌‍﻿﻿‌‍﻿‍​﻿‍﻿‌‍‍‌‌‍‌​​﻿﻿‌‌‍‌‍‌‍​‌​﻿‍‌​﻿​‌‌‍‌‍​﻿‌‍‌‍​‌​﻿‍​​‍﻿‌​﻿‌​‌‍​‍‌‍‌‍​﻿​​​‍﻿‌​﻿‌​‌‍​‌​﻿‌​‌‍​‌​‍﻿‌‌‍​‌‌‍​﻿​﻿​​​﻿‌﻿​‍﻿‌​﻿‍​‌‍‌‌​﻿‌﻿‌‍‌‌‌‍‌‍‌‍‌​‌‍‌‌​﻿‌﻿​﻿​‍​﻿​﻿​﻿‌‌‌‍‌‍​﻿‍﻿‌﻿‌​‌﻿‍‌‌﻿​​‌‍‌‌​﻿﻿‌‌‍​‍‌‍﻿​‌‍﻿﻿‌‍‌﻿‌‌​​‌‍﻿﻿‌﻿​﻿‌﻿‌​​﻿‍﻿‌﻿​​‌‍​‌‌﻿‌​‌‍‍​​﻿﻿‌‌﻿‌​‌‍‍‌‌﻿‌​‌‍﻿​‌‍‌‌​﻿﻿﻿‌‍​‍‌‍​‌‌﻿​﻿‌‍‌‌‌‌‌‌‌﻿​‍‌‍﻿​​﻿﻿‌‌‍‍​‌﻿‌​‌﻿‌​‌﻿​​‌﻿​﻿​‍‌‌​﻿​﻿‌​​‌​‍‌‌​﻿​‍‌​‌‍​‍‌‌​﻿​‍‌​‌‍‌‍​﻿‌‍﻿‌‌﻿​﻿​‍﻿‍‌﻿​﻿‌﻿‌​‌‍​‌‌‍​﻿‌‍‍﻿‌‍﻿﻿‌﻿‌‍‌‍‌‌‌﻿​‍‌‍‌‍‌‍﻿​‌‍﻿﻿‌﻿‌﻿​‍﻿‍‌‍​﻿‌‍﻿﻿​‍‌‍‌‍‍‌‌‍‌​​﻿﻿‌‌‍‌‍‌‍​‌​﻿‍‌​﻿​‌‌‍‌‍​﻿‌‍‌‍​‌​﻿‍​​‍﻿‌​﻿‌​‌‍​‍‌‍‌‍​﻿​​​‍﻿‌​﻿‌​‌‍​‌​﻿‌​‌‍​‌​‍﻿‌‌‍​‌‌‍​﻿​﻿​​​﻿‌﻿​‍﻿‌​﻿‍​‌‍‌‌​﻿‌﻿‌‍‌‌‌‍‌‍‌‍‌​‌‍‌‌​﻿‌﻿​﻿​‍​﻿​﻿​﻿‌‌‌‍‌‍​‍‌‍‌﻿‌​‌﻿‍‌‌﻿​​‌‍‌‌​﻿﻿‌‌‍​‍‌‍﻿​‌‍﻿﻿‌‍‌﻿‌‌​​‌‍﻿﻿‌﻿​﻿‌﻿‌​​‍‌‍‌﻿​​‌‍​‌‌﻿‌​‌‍‍​​﻿﻿‌‌﻿‌​‌‍‍‌‌﻿‌​‌‍﻿​‌‍‌‌​‍‌‍‌﻿​​‌‍‌‌‌﻿​‍‌﻿​﻿‌﻿​​‌‍‌‌‌‍​﻿‌﻿‌​‌‍‍‌‌﻿‌‍‌‍‌‌​﻿﻿‌‌﻿​​‌﻿‌‌‌‍​‍‌‍﻿​‌‍‍‌‌﻿​﻿‌‍‍​‌‍‌‌‌‍‌​​‍​‍‌﻿﻿‌](https://stackoverflow.blog/2026/05/29/find-out-stage-ai-supply-chain-password-protection/)**
+  `Stack Overflow Blog` · -1.5h ago
+  In this two-for-one special recorded at HumanX, Ryan is joined by Dataiku’s Florian Douetteau to chat about the governance, orchestration, and data requirements for serious agentic systems and 1Password’s Nancy Wang for a conversation on making agent swarms secure.​​​​‌﻿‍﻿​‍​‍‌‍﻿…
+
+**4.** **[The mysterious Hy3 LLM is topping OpenRouter Model Rankings by a large margin](https://minimaxir.com/2026/05/openrouter-hy3/)**
+  `Hacker News` · 6.0h ago
   Comments
 
-**4.** **[Commission fines Temu €200M for breaching the Digital Services Act](https://ec.europa.eu/commission/presscorner/home/en)**
-  `Hacker News` · 1.9h ago
-  Comments
-
-**5.** **[AI sticker shock hits corporate America](https://www.axios.com/2026/05/28/ai-spending-roi-enterprise-costs)**
-  `Hacker News` · 2.2h ago
+**5.** **[SF startup is testing robots in Airbnbs, and trashing them, lawsuit claims](https://sfstandard.com/2026/05/28/sf-startup-secretly-testing-robots-airbnbs-trashing-lawsuit-claims/)**
+  `Hacker News` · 6.5h ago
   Comments
 
 ---
 
 ## 🤖 AI & Machine Learning
 
-**1.** **[Krasis update: Qwen3.6-35B-A3B (Q4) at reading speed, 1x 8GB 3070 Mobile laptop (32GB RAM)](https://www.reddit.com/r/LocalLLaMA/comments/1tpyqng/krasis_update_qwen3635ba3b_q4_at_reading_speed_1x/)**
-  `r/LocalLLaMA` · 3.2h ago
-  Context Krasis is an LLM runtime for running models that don't fit into VRAM. Krasis streams the model through VRAM from system RAM efficiently and handles prefill and decode as separate architectures and optimised usecases. Latest results (v1.0 release) 1x Laptop RTX 3070 Mobile…
+**1.** **[EvoRepair: Enhancing Vulnerability Repair Agents Through Experience-Based Self-Evolution](https://arxiv.org/abs/2605.30105)**
+  `arXiv cs.SE` · 2.2h ago
+  arXiv:2605.30105v1 Announce Type: new Abstract: Large Language Models (LLMs) have shown promise for automated vulnerability repair (AVR), but they still face several limitations, including the lack of intra-vulnerability experience accumulation and the lack of cross-vulnerability…
 
-**2.** **[Benchmarks are Not Enough: RAMP for Runtime Assessing of Agentic Models in Production Systems](https://arxiv.org/abs/2605.27492)**
-  `arXiv cs.SE` · 8.9h ago
-  arXiv:2605.27492v1 Announce Type: new Abstract: LLM agents are rapidly evolving from coding assistants into autonomous software engineering systems. However, existing evaluation methodologies remain largely centered on static, isolated, and short-horizon benchmarks that fail to c…
+**2.** **[Towards Demystifying and Repairing LLM-in-the-Loop Vulnerabilities](https://arxiv.org/abs/2605.28893)**
+  `arXiv cs.SE` · 2.2h ago
+  arXiv:2605.28893v1 Announce Type: new Abstract: Large Language Models(LLMs) have been actively integrated into modern software systems as critical components. LLM-in-the-loop vulnerabilities, where vulnerabilities are introduced by LLMs and their dependent downstream components, …
 
-**3.** **[DeltaMCP: Incremental Regeneration via Spec-Aware Transformation for MCP servers](https://arxiv.org/abs/2605.28148)**
-  `arXiv cs.SE` · 8.9h ago
-  arXiv:2605.28148v1 Announce Type: new Abstract: The rapid development of LLMs coupled with the introduction of Model Context Protocol (MCP) has revolutionized how intelligent agents interact with APIs through deterministic and structured methods \cite{ModelContextProtocolIntro202…
+**3.** **[SCDBench: A Benchmark for LLM-Based Smart Contract Decompilers](https://arxiv.org/abs/2605.29059)**
+  `arXiv cs.SE` · 2.2h ago
+  arXiv:2605.29059v1 Announce Type: new Abstract: Smart contract decompilation aims to recover high-level source code from bytecode, but evaluating decompilers remains difficult because existing studies use narrow datasets, inconsistent metrics, and limited semantic consistency che…
 
-**4.** **[Automating Formal Verification with Agent-Guided Tree Search](https://arxiv.org/abs/2605.27485)**
-  `arXiv cs.SE` · 8.9h ago
-  arXiv:2605.27485v1 Announce Type: cross Abstract: Formal verification offers a path to provably correct software, but writing verified code remains expensive enough that the technique is rarely used in production. Recent large language models can accelerate this work, and recent …
+**4.** **[GUITestScape: Towards Open-set Evaluation on Exploratory GUI Testing](https://arxiv.org/abs/2605.29532)**
+  `arXiv cs.SE` · 2.2h ago
+  arXiv:2605.29532v1 Announce Type: new Abstract: Exploratory GUI testing is a particularly demanding setting for MLLM agents: without predefined test scripts, an agent must autonomously navigate an application and discover defects through its own interaction. However, current eval…
 
-**5.** **[DynaSchedBench: Calibrated Dynamic Scheduling Benchmarks and Observability Paradox in LLM-based Scheduling Agents](https://arxiv.org/abs/2605.27566)**
-  `arXiv cs.AI` · 8.9h ago
-  arXiv:2605.27566v1 Announce Type: new Abstract: Progress in neural combinatorial optimization for Dynamic Flexible Job Shop Scheduling Problem (DFJSP) is currently hindered by a methodological tension: static benchmarks encourage benchmark overfitting, while uncalibrated generato…
+**5.** **[Benchmarking Open-Source Safety Guard Models: A Comprehensive Evaluation](https://arxiv.org/abs/2605.28830)**
+  `arXiv cs.SE` · 2.2h ago
+  arXiv:2605.28830v1 Announce Type: cross Abstract: As Large Language Models (LLMs) are increasingly deployed in safety-critical applications, robust content moderation becomes essential. We present a comprehensive evaluation of 14 open-source safety guard models on a curated bench…
 
 ---
 
 ## 🔐 Cybersecurity
 
-**1.** **[Threat Intel: Lithuania Investigates B2B Credential Misuse Exposing 600,000 National Registry Records](https://www.reddit.com/r/netsec/comments/1tp1gws/threat_intel_lithuania_investigates_b2b/)**
-  `r/netsec` · 26.5h ago
-  The Lithuanian Prosecutor General’s Office and the Criminal Police Bureau have initiated a joint investigation into a large-scale data exfiltration incident targeting the State Enterprise Centre of Registers . The incident involved the unauthorized copying of over 600,000 records…
+**1.** **[Name That Toon Contest](https://www.darkreading.com/events/celebrate-20-years-of-dark-reading-name-that-toon-contest)**
+  `Dark Reading` · -676.8h ago
 
-**2.** **[Released: Dataforge Honeypot](https://www.reddit.com/r/cybersecurity/comments/1tq0j6e/released_dataforge_honeypot/)**
-  `r/cybersecurity` · 1.6h ago
-  Dataforge Honeypot uses a split architecture — a lightweight Docker-based detector you deploy on any network segment (LAN, DMZ, VLAN, branch office, etc.), paired with a cloud-hosted director that aggregates events, manages detector configuration, and delivers alerts via email or…
+**2.** **[Critical Gogs RCE Vulnerability Lets Any Authenticated User Execute Arbitrary Code](https://thehackernews.com/2026/05/critical-gogs-rce-vulnerability-lets.html)**
+  `The Hacker News` · 12.8h ago
+  A critical security vulnerability has been disclosed in Gogs, a popular open-source self-hosted Git service, that allows an authenticated user to execute arbitrary code under certain conditions. The security flaw, per Rapid7, is rated 9.4 on the CVSS scoring system. It does not h…
 
-**3.** **[A week after Dutch FIOD seized 800+ servers, the hosting network's ASN (AS209847) is still scanning at its normal daily rate](https://www.reddit.com/r/netsec/comments/1tp6dz0/a_week_after_dutch_fiod_seized_800_servers_the/)**
-  `r/netsec` · 22.9h ago
-  After FIOD seized 800+ servers and arrested two operators on May 18, the ELLIO research team reports that scanning from the network's ASN ranges has continued largely uninterrupted - and that while roughly a third of the recently-active ranges (including the legacy Stark blocks 9…
+**3.** **[Threat Actors Exploit Critical FortiClient EMS Flaw to Deploy Credential Stealer](https://thehackernews.com/2026/05/threat-actors-exploit-critical.html)**
+  `The Hacker News` · 14.8h ago
+  Threat actors are continuing to exploit a critical, now-patched security flaw impacting FortiClient Endpoint Management Server (EMS) deployments to deliver credential-stealing malware. "The campaign abused trusted endpoint management infrastructure to deliver malware across manag…
 
-**4.** **[Raising the Cybersecurity Stakes: Ante up for the Agentic Era.](https://www.reddit.com/r/cybersecurity/comments/1tq1oqf/raising_the_cybersecurity_stakes_ante_up_for_the/)**
-  `r/cybersecurity` · 0.7h ago
-  https://www.securityweek.com/raising-the-cybersecurity-stakes-ante-up-for-the-agentic-era/ &#32; submitted by &#32; /u/TechEnthusiast2026 [link] &#32; [comments]
+**4.** **[ISC Stormcast For Friday, May 29th, 2026 https://isc.sans.edu/podcastdetail/9950, (Fri, May 29th)](https://isc.sans.edu/diary/rss/33030)**
+  `SANS ISC` · 4.2h ago
+  (c) SANS Internet Storm Center. https://isc.sans.edu Creative Commons Attribution-Noncommercial 3.0 United States License.
 
-**5.** **[New AI Usage Report: Enterprise AI Risk Is Heavily Concentrated Among a Small Group of AI "Power users"](https://thehackernews.com/2026/05/new-ai-usage-report-enterprise-ai-risk.html)**
-  `The Hacker News` · 1.4h ago
-  State of AI Usage Report 2026 (full report here) by LayerX Security reveals the extent of the enterprise AI visibility gap and why most organizations still don't understand where their AI exposure is actually coming from. The research shows that enterprise AI risk is not distribu…
+**5.** **[Hackers exploit FortiClient EMS flaw to push infostealer malware](https://www.bleepingcomputer.com/news/security/hackers-exploit-forticlient-ems-flaw-to-push-infostealer-malware/)**
+  `BleepingComputer` · 12.8h ago
+  Hackers are exploiting an authentication bypass vulnerability (CVE-2026-35616) in FortiClient Enterprise Management Server (EMS) to deliver an undocumented credential stealer called EKZ. [...]
 
 ---
 
 ## 🌐 General Tech & Shifts
 
-**1.** **[Gemini for Google Home can now use your cameras to trigger automations](https://www.theverge.com/tech/938771/google-home-gemini-ai-camera-automations)**
-  `The Verge` · 1.8h ago
-  Google Home is rolling out a new Gemini-powered automation feature that can trigger smart home routines based on what your security cameras can see. This is one of several updates announced yesterday for Gemini for Home, including enhanced voice command support and general stabil…
+**1.** **[LLMs believe false statements even after explicit warnings that they're false](https://arstechnica.com/ai/2026/05/llms-believe-false-statements-even-after-explicit-warnings-that-theyre-false/)**
+  `Ars Technica` · 8.7h ago
+  Fine-tuning tests show "bias ... toward confidently representing the claims as true."
 
-**2.** **[The Download: climate tech goes public and the AI Hype Index returns](https://www.technologyreview.com/2026/05/28/1138085/the-download-climate-tech-ipos-ai-hype-index/)**
-  `MIT Tech Review` · 0.7h ago
-  This is today&#8217;s edition of The Download, our weekday newsletter that provides a daily dose of what&#8217;s going on in the world of technology. Climate tech companies are going public. What’s next? Solar and battery company Solv Energy went public in February, hitting a $6 …
+**2.** **[Fed up with vibe coders, dev sneaks data-nuking prompt injection into their code](https://arstechnica.com/security/2026/05/fed-up-with-vibe-coders-dev-sneaks-data-nuking-prompt-injection-into-their-code/)**
+  `Ars Technica` · 9.7h ago
+  Undisclosed addition in jqwik instructed AI coding agents to delete app output.
 
-**3.** **[Forecasters predict below-average hurricane season, advise against complacency](https://arstechnica.com/science/2026/05/forecasters-predict-below-average-hurricane-season-advise-against-complacency/)**
-  `Ars Technica` · 2.9h ago
-  Forecasters say expected El Niño should temper hurricanes in Atlantic, urge preparedness.
+**3.** **[The internet is being rebuilt for machines](https://techcrunch.com/2026/05/28/the-internet-is-being-rebuilt-for-machines/)**
+  `TechCrunch` · 8.8h ago
+  As AI agents move from experiments to production, AWS, Cloudflare, and others are redesigning cloud infrastructure for a future dominated by machine-generated internet traffic instead of human users.
 
-**4.** **[The AI Hype Index: AI gets booed in graduation season](https://www.technologyreview.com/2026/05/28/1138053/the-ai-hype-index-ai-gets-booed-in-graduation-season/)**
-  `MIT Tech Review` · 3.0h ago
-  It is one thing to say AI will change the world. It is another to expect the class of 2026 to applaud it. In fact, when former Google CEO Eric Schmidt told University of Arizona graduates that their task is to help shape AI, he was met with a resounding chorus of boos. “I can&#82…
+**4.** **[Microsoft 365 Copilot gets a speed boost and cleaner design](https://www.theverge.com/tech/939273/microsoft-365-copilot-redesign)**
+  `The Verge` · 10.0h ago
+  Microsoft is launching a revamped version of Microsoft 365 Copilot, offering a cleaner design that the company claims loads twice as fast. As part of this update, Copilot will provide more reliable and structured responses that are easier to scan, according to Microsoft. The rede…
 
-**5.** **[Temu fined more than $230 million by EU over illegal product sales](https://www.theverge.com/policy/938792/temu-eu-dsa-fine-illegal-products)**
-  `The Verge` · 1.1h ago
-  Temu has been fined &#8364;200 million (about $232 million) by the European Commission after it found that consumers are "very likely to encounter illegal items" on the popular Chinese e-commerce platform. According to the commission, Temu breached Digital Service Act (DSA) rules…
+**5.** **[2027 Audi RS5 first drive: A performance PHEV with split personalities](https://arstechnica.com/cars/2026/05/2027-audi-rs5-first-drive-a-performance-phev-with-split-personalities/)**
+  `Ars Technica` · 8.2h ago
+  Audi has developed an entirely new electric torque-vectoring rear differential.
 
 ---
 
 
-*Generated at 2026-05-28 12:53 UTC · Sources: 33 feeds across 4 categories*
+*Generated at 2026-05-29 06:11 UTC · Sources: 33 feeds across 4 categories*
