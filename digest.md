@@ -1,6 +1,6 @@
-# 🌅 Tech Digest — Saturday, May 30, 2026
+# 🌅 Tech Digest — Sunday, May 31, 2026
 
-> Auto-generated daily briefing · 118 articles collected
+> Auto-generated daily briefing · 67 articles collected
 
 ---
 
@@ -9,42 +9,42 @@
 > The highest-signal stories across all categories today.
 
 **1. [Name That Toon Contest](https://www.darkreading.com/events/celebrate-20-years-of-dark-reading-name-that-toon-contest)**
-*🔐 Cybersecurity · Dark Reading · -653.2h ago*
+*🔐 Cybersecurity · Dark Reading · -628.7h ago*
 
-**2. [Attackers Use LLM Agent for Post-Exploitation After Marimo CVE-2026-39987 Exploit](https://thehackernews.com/2026/05/attackers-use-llm-agent-for-post.html)**
-*🔐 Cybersecurity · The Hacker News · 15.1h ago*
+**2. [Palo Alto GlobalProtect VPN auth bypass flaw now exploited in attacks](https://www.bleepingcomputer.com/news/security/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-in-attacks/)**
+*🔐 Cybersecurity · BleepingComputer · 12.2h ago*
 
-An unknown threat actor has been observed using a large language model (LLM) agent to conduct post-compromise actions after obtaining initial access following the exploitation of a publicly-accessible Marimo network using a recently disclosed vulnerability. "The attacker compromised an internet-reachable Marimo noteboo…
+Palo Alto Networks is warning that hackers are now exploiting a PAN-OS GlobalProtect authentication bypass flaw, tracked as CVE-2026-0257, in attacks attempting to breach corporate networks. [...]…
 
 
-**3. [ChatGPhish Vulnerability Turns ChatGPT Web Summaries Into a Phishing Surface](https://thehackernews.com/2026/05/chatgphish-vulnerability-turns-chatgpt.html)**
-*🔐 Cybersecurity · The Hacker News · 11.6h ago*
+**3. [The AV2 Video Standard Has Released (Final v1.0 Specification)](https://av2.aomedia.org)**
+*⚙️ Software Engineering · Hacker News · 8.5h ago*
 
-Cybersecurity researchers have disclosed details of a vulnerability in OpenAI ChatGPT that leverages the artificial intelligence (AI) assistant's implicit trust in Markdown links and images to trigger prompt injections and open the door to phishing attacks. The technique has been codenamed ChatGPhish by Permiso Securit…
+Comments…
 
 
 ---
 
 ## ⚙️ Software Engineering
 
-**1.** **[Show HN: Tiny-vLLM – high performance LLM inference engine in C++ and CUDA](https://github.com/jmaczan/tiny-vllm)**
-  `Hacker News` · 10.1h ago
+**1.** **[The AV2 Video Standard Has Released (Final v1.0 Specification)](https://av2.aomedia.org)**
+  `Hacker News` · 8.5h ago
   Comments
 
-**2.** **[Show HN: Open-source private home security camera system (end-to-end encryption)](https://github.com/secluso/core)**
-  `Hacker News` · 7.2h ago
+**2.** **[Ahoy, DECmate II the little PDP-8 that could](http://oldvcr.blogspot.com/2026/05/ahoy-decmate-ii-little-pdp-8-that-could.html)**
+  `Hacker News` · 1.6h ago
   Comments
 
-**3.** **[Records Show UC Sharing Data with US Customs and Border Protection](https://www.dailycal.org/news/uc/records-show-uc-sharing-data-with-us-customs-and-border-protection/article_785ac3ca-9ab2-4ab0-bbb8-07742e62d3d8.html)**
-  `Hacker News` · 0.3h ago
+**3.** **[wolfSSL releases a new product; wolfCOSE a zero alloc C embbedded COSE stack](https://github.com/wolfSSL/wolfCOSE)**
+  `Hacker News` · 9.6h ago
   Comments
 
-**4.** **[Shift will clean homes for free to train future robots](https://www.theverge.com/ai-artificial-intelligence/939765/ai-training-data-startup-shift-free-cleaning)**
-  `Hacker News` · 10.5h ago
+**4.** **[Domain expertise has always been the real moat](https://www.brethorsting.com/blog/2026/05/domain-expertise-has-always-been-the-real-moat/)**
+  `Hacker News` · 9.6h ago
   Comments
 
-**5.** **[Perry Compiles TypeScript directly to executables using SWC and LLVM](https://www.perryts.com/)**
-  `Hacker News` · 2.5h ago
+**5.** **[Building a LangGraph pipeline for production data engineering](https://labyrinthanalyticsconsulting.com/blog/building-first-langgraph-pipeline)**
+  `Hacker News` · 1.6h ago
   Comments
 
 ---
@@ -52,49 +52,49 @@ Cybersecurity researchers have disclosed details of a vulnerability in OpenAI Ch
 ## 🔐 Cybersecurity
 
 **1.** **[Name That Toon Contest](https://www.darkreading.com/events/celebrate-20-years-of-dark-reading-name-that-toon-contest)**
-  `Dark Reading` · -653.2h ago
+  `Dark Reading` · -628.7h ago
 
-**2.** **[Attackers Use LLM Agent for Post-Exploitation After Marimo CVE-2026-39987 Exploit](https://thehackernews.com/2026/05/attackers-use-llm-agent-for-post.html)**
-  `The Hacker News` · 15.1h ago
-  An unknown threat actor has been observed using a large language model (LLM) agent to conduct post-compromise actions after obtaining initial access following the exploitation of a publicly-accessible Marimo network using a recently disclosed vulnerability. "The attacker compromi…
+**2.** **[Palo Alto GlobalProtect VPN auth bypass flaw now exploited in attacks](https://www.bleepingcomputer.com/news/security/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-in-attacks/)**
+  `BleepingComputer` · 12.2h ago
+  Palo Alto Networks is warning that hackers are now exploiting a PAN-OS GlobalProtect authentication bypass flaw, tracked as CVE-2026-0257, in attacks attempting to breach corporate networks. [...]
 
-**3.** **[ChatGPhish Vulnerability Turns ChatGPT Web Summaries Into a Phishing Surface](https://thehackernews.com/2026/05/chatgphish-vulnerability-turns-chatgpt.html)**
-  `The Hacker News` · 11.6h ago
-  Cybersecurity researchers have disclosed details of a vulnerability in OpenAI ChatGPT that leverages the artificial intelligence (AI) assistant's implicit trust in Markdown links and images to trigger prompt injections and open the door to phishing attacks. The technique has been…
+**3.** **[PAN-OS GlobalProtect Authentication Bypass (CVE-2026-0257) Under Active Exploitation](https://thehackernews.com/2026/05/pan-os-globalprotect-authentication.html)**
+  `The Hacker News` · 23.6h ago
+  Palo Alto Networks has warned that a recently disclosed medium-severity security flaw impacting PAN-OS and Prisma Access has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-0257 (CVSS score: 7.8), refers to a case of authentication bypass that c…
 
-**4.** **[ChatGPT share links abused to host fake outage pages to deliver malware](https://www.bleepingcomputer.com/news/security/chatgpt-share-links-abused-to-host-fake-outage-pages-to-deliver-malware/)**
-  `BleepingComputer` · 11.4h ago
+**4.** **[New CIFSwitch Linux flaw gives root on multiple distributions](https://www.bleepingcomputer.com/news/security/new-cifswitch-linux-flaw-gives-root-on-multiple-distributions/)**
+  `BleepingComputer` · 16.0h ago
+  A newly discovered local privilege escalation vulnerability dubbed 'CIFSwitch' in the Linux kernel could allow attackers to forge CIFS authentication key descriptions, abuse the kernel's key request mechanism, and gain root privileges. [...]
+
+**5.** **[ChatGPT share links abused to host fake outage pages to deliver malware](https://www.bleepingcomputer.com/news/security/chatgpt-share-links-abused-to-host-fake-outage-pages-to-deliver-malware/)**
+  `BleepingComputer` · 35.9h ago
   Threat actors are abusing ChatGPT's content-sharing feature to display fake OpenAI outage pages that direct users to download malware disguised as the ChatGPT desktop application. [...]
-
-**5.** **['The Com' Cyberattacks Support Violence &amp; Sexploitation](https://www.darkreading.com/threat-intelligence/the-com-cyberattacks-violence-sexploitation)**
-  `Dark Reading` · 17.8h ago
-  Your organization's security failures have consequences for everyone else too, since this neo-Nazi-infested criminal gang uses its cyber winnings to support more violent and widespread crimes.
 
 ---
 
 ## 🌐 General Tech & Shifts
 
-**1.** **[House of the Dragon S3 trailer revels in dragons, fire, and blood](https://arstechnica.com/culture/2026/05/house-of-the-dragon-s3-trailer-revels-in-dragons-fire-and-blood/)**
-  `Ars Technica` · 11.4h ago
-  "The crown is a weight that crushes. You'll do things that spell death for all involved."
+**1.** **[Microsoft is threatening legal action for disclosing exploits](https://www.theverge.com/tech/940416/microsoft-nightmare-eclipse-zero-day-vulnerability)**
+  `The Verge` · 14.9h ago
+  Microsoft is facing criticism for its handling of zero-day exploits. Someone going by the name Nightmare Eclipse has been publicly feuding with the company, posting proof-of-concept exploit code. Some of their posts suggest that they're a disgruntled former employee. But what cau…
 
-**2.** **[DOJ sues states that rejected ICE requests for undercover license plates](https://arstechnica.com/tech-policy/2026/05/doj-sues-states-that-rejected-ice-requests-for-undercover-license-plates/)**
-  `Ars Technica` · 12.1h ago
-  DOJ keeps accusing ICE monitoring sites of doxing, but evidence remains scarce.
+**2.** **[SoftBank says it will invest up to €75 billion to build French data centers](https://techcrunch.com/2026/05/30/softbank-says-it-will-invest-up-to-e75-billion-to-build-french-data-centers/)**
+  `TechCrunch` · 8.5h ago
+  The goal, the firm said, is to develop and operate up to 5 gigawatts of additional data center capacity.
 
-**3.** **[The White House’s Aliens.gov Site Brags That ICE Arrested More Than 700 US Citizens](https://www.wired.com/story/white-house-aliens-gov-us-citizens-arrested/)**
-  `Wired` · 8.9h ago
-  The website, which compares human beings to extraterrestrials, touts arrest numbers from the Trump administration’s sweeping immigration crackdown. But some of its details are really out there.
+**3.** **[Meta is reportedly developing an AI pendant](https://techcrunch.com/2026/05/30/meta-is-reportedly-developing-an-ai-pendant/)**
+  `TechCrunch` · 14.3h ago
+  Meta seems to be making big bets on AI-powered hardware.
 
-**4.** **[Startup offers free home cleaning—if it can record it all for robot training](https://arstechnica.com/ai/2026/05/robot-training-startup-will-send-humans-wearing-cameras-to-clean-your-home/)**
-  `Ars Technica` · 13.5h ago
-  The latest twist in paying humans to wear head cameras for robot training data.
+**4.** **[I put Google’s 24/7 AI assistant Gemini Spark to work, and it’s actually pretty useful](https://techcrunch.com/2026/05/30/i-put-googles-24-7-ai-assistant-gemini-spark-to-work-and-its-actually-pretty-useful/)**
+  `TechCrunch` · 14.8h ago
+  Gemini Spark helps automate everyday tasks, from inbox summaries to local event planning, but it’s unclear why Google made it a separate product.
 
-**5.** **[Hands-On With Gemini Spark: I Gave It Access to My Life and It Friend-Zoned My Boyfriend](https://www.wired.com/story/google-gemini-spark-ai-agent-hands-on/)**
-  `Wired` · 10.6h ago
-  Google’s new AI agent combed through my emails, documents, and calendar to plan a birthday party and still didn’t clock the person most important to me.
+**5.** **[Grifters, cynics, and true believers: The family tree of vaccine opponents](https://arstechnica.com/science/2026/05/grifters-cynics-and-true-believers-the-family-tree-of-vaccine-opponents/)**
+  `Ars Technica` · 19.3h ago
+  A new book looks into the long history of people who have opposed vaccines.
 
 ---
 
 
-*Generated at 2026-05-30 05:45 UTC · Sources: 33 feeds across 4 categories*
+*Generated at 2026-05-31 06:15 UTC · Sources: 33 feeds across 4 categories*
