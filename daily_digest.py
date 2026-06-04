@@ -183,7 +183,7 @@ def fetch_all_feeds(max_age_hours: int = MAX_AGE_HOURS) -> list:
                     articles.append({
                         "title": title,
                         "link": link,
-                        "summary": summary[:640],
+                        "summary": summary,
                         "category": category,
                         "source": source_name,
                         "published": published,
@@ -230,19 +230,14 @@ def format_article(article: dict, index: int = None) -> str:
     published_ts = article["published"].strftime("%Y-%m-%d %H:%M UTC")
 
     lines = [
-        f"{prefix}**[{article['title']}]({article['link']})**",
+        f"{prefix}[**{article['title']}**]({article['link']})",
         f"*{article['source']} · {published_ts} · {article['age_hours']}h ago*",
         "",
     ]
 
-    if article.get("llm_summary"):
-        lines.append(article['llm_summary'])
-    else:
-        summary_text = article.get("summary", "").replace("\n", " ").strip()
-        if summary_text:
-            if len(summary_text) > 420:
-                summary_text = summary_text[:420].rstrip() + "…"
-            lines.append(summary_text)
+    summary_text = article.get("llm_summary") or article.get("summary", "").replace("\n", " ").strip()
+    if summary_text:
+        lines.append(summary_text)
 
     lines.append("")
     return "\n".join(lines)

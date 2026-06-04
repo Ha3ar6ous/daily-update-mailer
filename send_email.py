@@ -35,11 +35,13 @@ def md_to_html(md: str) -> str:
             html_lines.append("<hr />")
         else:
             text = line
+            # Process patterns in order: links first, then bold, then italic
+            text = re.sub(r"\[\*\*(.+?)\*\*\]\((.+?)\)", r"<a href=\"\2\"><strong>\1</strong></a>", text)
             text = re.sub(r"\*\*\[(.+?)\]\((.+?)\)\*\*", r"<strong><a href=\"\2\">\1</a></strong>", text)
+            text = re.sub(r"\[(.+?)\]\((.+?)\)", r"<a href=\"\2\">\1</a>", text)
             text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
             text = re.sub(r"\*(.+?)\*", r"<em>\1</em>", text)
             text = re.sub(r"`(.+?)`", r"<code>\1</code>", text)
-            text = re.sub(r"\[(.+?)\]\((.+?)\)", r"<a href=\"\2\">\1</a>", text)
 
             if text.strip():
                 html_lines.append(f"<p>{text}</p>")
@@ -149,27 +151,31 @@ def build_email_html(digest_md: str) -> str:
     .article-title a {{
       color: #1e3a8a;
       text-decoration: none;
-      border-bottom: 2px solid transparent;
-      transition: border 0.2s ease;
+      font-weight: 700;
+      border-bottom: 3px solid #3b82f6;
+      transition: all 0.2s ease;
+      display: inline-block;
     }}
     .article-title a:hover {{
-      border-bottom: 2px solid #3b82f6;
-    }}
-    .article-meta {{
-      margin-top: 8px;
-      font-size: 13px;
-      color: #64748b;
-      font-weight: 500;
-    }}
-    .article-meta span {{
-      margin-right: 16px;
+      background-color: #dbeafe;
+      border-bottom: 3px solid #1e40af;
     }}
     .article-summary {{
       margin-top: 12px;
       padding: 12px 0 0;
       font-size: 14px;
       color: #374151;
-      line-height: 1.6;
+      line-height: 1.7;
+    }}
+    .article-summary a {{
+      color: #1e40af;
+      font-weight: 600;
+      border-bottom: 2px solid #3b82f6;
+      transition: all 0.2s ease;
+    }}
+    .article-summary a:hover {{
+      background-color: #dbeafe;
+      border-bottom: 2px solid #1e40af;
     }}
     strong {{
       color: #1f2937;

@@ -121,8 +121,6 @@ def explain_article(article: dict) -> str:
     if not summary:
         source_text = article.get("summary", "").replace("\n", " ").strip()
         if source_text:
-            if len(source_text) > 420:
-                source_text = source_text[:420].rstrip() + "…"
             summary = source_text
         else:
             summary = "No detailed summary available."
