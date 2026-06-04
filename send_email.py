@@ -1,4 +1,4 @@
-﻿"""
+"""
 send_email.py — Sends the generated digest as a polished HTML newsletter via Gmail SMTP.
 Uses environment variables for credentials and supports plaintext fallback.
 """
@@ -267,7 +267,8 @@ def normalize_plaintext(md: str) -> str:
 def send_digest_email():
     smtp_user = os.environ.get("GMAIL_USERNAME")
     smtp_pass = os.environ.get("GMAIL_PASSWORD")
-    recipient = os.environ.get("RECIPIENT_EMAIL", smtp_user)
+    recipient_str = os.environ.get("RECIPIENT_EMAIL", smtp_user)
+    recipients = [email.strip() for email in recipient_str.split(",") if email.strip()]
     digest_path = os.environ.get("DIGEST_OUTPUT", "digest.md")
 
     if not smtp_user or not smtp_pass:
@@ -285,17 +286,17 @@ def send_digest_email():
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
     message["From"] = smtp_user
-    message["To"] = recipient
+    message["To"] = ", ".join(recipients)
 
     plaintext = normalize_plaintext(digest_md)
     message.attach(MIMEText(plaintext, "plain"))
     message.attach(MIMEText(build_email_html(digest_md), "html"))
 
-    print(f"📧 Sending digest to {recipient}...")
+    print(f"📧 Sending digest to {', '.join(recipients)}...")
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
             smtp.login(smtp_user, smtp_pass)
-            smtp.sendmail(smtp_user, recipient, message.as_string())
+            smtp.sendmail(smtp_user, recipients, message.as_string())
         print("✅ Email sent successfully.")
     except Exception as exc:
         print(f"❌ Email send failed: {exc}")
