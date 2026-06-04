@@ -1,65 +1,50 @@
-"""
-send_email.py — Sends the digest.md as a styled HTML email via Gmail SMTP.
-Reads credentials from environment variables (set as GitHub Secrets).
+﻿"""
+send_email.py — Sends the generated digest as a polished HTML newsletter via Gmail SMTP.
+Uses environment variables for credentials and supports plaintext fallback.
 """
 
 import os
-import smtplib
 import datetime
+import smtplib
 import re
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
 def md_to_html(md: str) -> str:
-    """
-    Minimal Markdown → HTML converter for our specific digest format.
-    No external deps needed.
-    """
-    lines = md.split("\n")
+    lines = md.splitlines()
     html_lines = []
     in_blockquote = False
 
     for line in lines:
-        # Blockquote
         if line.startswith("> "):
             if not in_blockquote:
                 html_lines.append("<blockquote>")
                 in_blockquote = True
             html_lines.append(f"<p>{line[2:]}</p>")
             continue
-        else:
-            if in_blockquote:
-                html_lines.append("</blockquote>")
-                in_blockquote = False
+        if in_blockquote:
+            html_lines.append("</blockquote>")
+            in_blockquote = False
 
-        # H1
         if line.startswith("# "):
-            html_lines.append(f"<h1>{line[2:]}</h1>")
-        # H2
+            html_lines.append(f"<h1>{line[2:].strip()}</h1>")
         elif line.startswith("## "):
-            html_lines.append(f"<h2>{line[3:]}</h2>")
-        # HR
+            html_lines.append(f"<h2>{line[3:].strip()}</h2>")
         elif line.strip() == "---":
-            html_lines.append("<hr>")
-        # Inline markdown inside paragraph
+            html_lines.append("<hr />")
         else:
-            # Bold+link: **[text](url)**
-            line = re.sub(r'\*\*\[(.+?)\]\((.+?)\)\*\*',
-                          r'<strong><a href="\2">\1</a></strong>', line)
-            # Bold: **text**
-            line = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
-            # Italic: *text*
-            line = re.sub(r'\*(.+?)\*', r'<em>\1</em>', line)
-            # Inline code: `text`
-            line = re.sub(r'`(.+?)`', r'<code>\1</code>', line)
-            # Plain link: [text](url)
-            line = re.sub(r'\[(.+?)\]\((.+?)\)', r'<a href="\2">\1</a>', line)
+            text = line
+            text = re.sub(r"\*\*\[(.+?)\]\((.+?)\)\*\*", r"<strong><a href=\"\2\">\1</a></strong>", text)
+            text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+            text = re.sub(r"\*(.+?)\*", r"<em>\1</em>", text)
+            text = re.sub(r"`(.+?)`", r"<code>\1</code>", text)
+            text = re.sub(r"\[(.+?)\]\((.+?)\)", r"<a href=\"\2\">\1</a>", text)
 
-            if line.strip():
-                html_lines.append(f"<p>{line}</p>")
+            if text.strip():
+                html_lines.append(f"<p>{text}</p>")
             else:
-                html_lines.append("<br>")
+                html_lines.append("<div style=\"margin: 12px 0;\"></div>")
 
     if in_blockquote:
         html_lines.append("</blockquote>")
@@ -68,134 +53,170 @@ def md_to_html(md: str) -> str:
 
 
 def build_email_html(digest_md: str) -> str:
-    body = md_to_html(digest_md)
+    body_html = md_to_html(digest_md)
     today = datetime.date.today().strftime("%B %d, %Y")
-
     return f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Digest {today}</title>
-<style>
-  body {{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0f0f0f;
-    color: #e0e0e0;
-    margin: 0; padding: 20px;
-    line-height: 1.7;
-  }}
-  .container {{
-    max-width: 720px;
-    margin: 0 auto;
-    background: #1a1a1a;
-    border-radius: 12px;
-    padding: 32px 40px;
-    border: 1px solid #2a2a2a;
-  }}
-  h1 {{
-    font-size: 26px;
-    color: #f0c040;
-    margin-bottom: 8px;
-    border-bottom: 2px solid #333;
-    padding-bottom: 10px;
-  }}
-  h2 {{
-    font-size: 19px;
-    color: #60b0ff;
-    margin-top: 28px;
-    margin-bottom: 12px;
-    border-left: 4px solid #60b0ff;
-    padding-left: 10px;
-  }}
-  p {{ margin: 6px 0 10px 0; color: #ccc; }}
-  a {{ color: #7ec8e3; text-decoration: none; }}
-  a:hover {{ text-decoration: underline; }}
-  strong {{ color: #fff; }}
-  code {{
-    background: #2a2a2a;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Fira Code', monospace;
-    font-size: 13px;
-    color: #90ee90;
-  }}
-  hr {{
-    border: none;
-    border-top: 1px solid #333;
-    margin: 24px 0;
-  }}
-  blockquote {{
-    border-left: 3px solid #555;
-    margin: 0;
-    padding: 4px 16px;
-    color: #999;
-    font-style: italic;
-  }}
-  .footer {{
-    margin-top: 32px;
-    font-size: 12px;
-    color: #555;
-    text-align: center;
-  }}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Digest — {today}</title>
+  <style>
+    body {{
+      margin: 0;
+      padding: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: #eef2f7;
+      color: #182026;
+    }}
+    .wrapper {{
+      width: 100%;
+      padding: 24px 0;
+    }}
+    .container {{
+      max-width: 760px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 24px 64px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+    }}
+    .header {{
+      padding: 32px 40px 20px;
+      background: linear-gradient(135deg, #1f67ff 0%, #47b5ff 100%);
+      color: #ffffff;
+    }}
+    .header h1 {{
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }}
+    .header p {{
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 15px;
+      line-height: 1.6;
+    }}
+    .content {{
+      padding: 32px 40px 40px;
+      line-height: 1.7;
+    }}
+    h1 {{
+      color: #102a43;
+      font-size: 24px;
+      margin: 24px 0 12px;
+    }}
+    h2 {{
+      color: #0f172a;
+      font-size: 19px;
+      margin: 20px 0 8px;
+      border-left: 4px solid #1f67ff;
+      padding-left: 12px;
+    }}
+    p {{
+      color: #334155;
+      margin: 10px 0;
+      font-size: 15px;
+    }}
+    a {{
+      color: #1f67ff;
+      text-decoration: none;
+    }}
+    a:hover {{
+      text-decoration: underline;
+    }}
+    hr {{
+      border: none;
+      border-top: 1px solid #d9e2ec;
+      margin: 28px 0;
+    }}
+    blockquote {{
+      margin: 0 0 18px;
+      padding: 16px 20px;
+      border-left: 4px solid #1f67ff;
+      background-color: #f0f4ff;
+      color: #475569;
+      font-style: italic;
+    }}
+    code {{
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }}
+    .footer {{
+      margin-top: 30px;
+      font-size: 13px;
+      color: #667085;
+      text-align: center;
+    }}
+  </style>
 </head>
 <body>
-<div class="container">
-{body}
-<div class="footer">
-  Tech Digest Pipeline · Delivered by GitHub Actions · Unsubscribe anytime by disabling the workflow
-</div>
-</div>
+  <div class="wrapper">
+    <div class="container">
+      <div class="header">
+        <h1>Tech Digest</h1>
+        <p>Curated morning briefing for software engineers. Insights, context, and impact in one concise note.</p>
+      </div>
+      <div class="content">
+{body_html}
+      </div>
+      <div class="footer">
+        Delivered automatically by GitHub Actions · Update your settings in the workflow if you want to pause delivery.
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 """
 
 
+def normalize_plaintext(md: str) -> str:
+    text = re.sub(r"\*\*\[(.+?)\]\((.+?)\)\*\*", r"\1 (\2)", md)
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+    text = re.sub(r"\*(.+?)\*", r"\1", text)
+    text = re.sub(r"\[(.+?)\]\((.+?)\)", r"\1 (\2)", text)
+    return text
+
+
 def send_digest_email():
-    # Read from environment
     smtp_user = os.environ.get("GMAIL_USERNAME")
     smtp_pass = os.environ.get("GMAIL_PASSWORD")
     recipient = os.environ.get("RECIPIENT_EMAIL", smtp_user)
     digest_path = os.environ.get("DIGEST_OUTPUT", "digest.md")
 
     if not smtp_user or not smtp_pass:
-        print("⚠️  GMAIL_USERNAME or GMAIL_PASSWORD not set. Skipping email.")
+        print("⚠️ GMAIL_USERNAME or GMAIL_PASSWORD not set. Skipping email.")
         return
 
-    # Read digest
     if not os.path.exists(digest_path):
         print(f"❌ Digest file not found at {digest_path}")
         return
 
-    with open(digest_path, "r", encoding="utf-8") as f:
-        digest_md = f.read()
+    with open(digest_path, "r", encoding="utf-8") as reader:
+        digest_md = reader.read()
 
-    today = datetime.date.today().strftime("%B %d, %Y")
-    subject = f"🌅 Tech Digest — {today}"
+    subject = f"🌅 Tech Digest — {datetime.date.today():%B %d, %Y}"
+    message = MIMEMultipart("alternative")
+    message["Subject"] = subject
+    message["From"] = smtp_user
+    message["To"] = recipient
 
-    # Build message
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = smtp_user
-    msg["To"] = recipient
+    plaintext = normalize_plaintext(digest_md)
+    message.attach(MIMEText(plaintext, "plain"))
+    message.attach(MIMEText(build_email_html(digest_md), "html"))
 
-    # Plain text fallback
-    msg.attach(MIMEText(digest_md, "plain"))
-    # HTML version
-    html_body = build_email_html(digest_md)
-    msg.attach(MIMEText(html_body, "html"))
-
-    # Send via Gmail SMTP
     print(f"📧 Sending digest to {recipient}...")
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(smtp_user, smtp_pass)
-            server.sendmail(smtp_user, recipient, msg.as_string())
-        print("✅ Email sent successfully!")
-    except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login(smtp_user, smtp_pass)
+            smtp.sendmail(smtp_user, recipient, message.as_string())
+        print("✅ Email sent successfully.")
+    except Exception as exc:
+        print(f"❌ Email send failed: {exc}")
         raise
 
 

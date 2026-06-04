@@ -1,17 +1,15 @@
-name: 🌅 Daily Tech Digest
+﻿name: 🌅 Daily Tech Digest
 
 on:
   schedule:
-    # Runs every day at 2:00 AM UTC = 7:30 AM IST
     - cron: '0 2 * * *'
-  # Allows you to run it manually from the Actions tab anytime
   workflow_dispatch:
 
 jobs:
   build-and-deliver:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Needed to commit digest.md back to repo
+      contents: read
 
     steps:
       - name: 📥 Checkout repository
@@ -26,6 +24,10 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: 🗞️ Generate digest
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ secrets.GROQ_MODEL }}
+          GROQ_API_URL: ${{ secrets.GROQ_API_URL }}
         run: python daily_digest.py
 
       - name: 📧 Send email (if credentials set)
@@ -34,12 +36,3 @@ jobs:
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: python send_email.py
-
-      - name: 💾 Commit digest to repository
-        run: |
-          git config --global user.name  "Tech Digest Bot"
-          git config --global user.email "bot@noreply.github.com"
-          git add digest.md
-          # Only commit if there are actual changes
-          git diff --staged --quiet || git commit -m "📰 Daily digest — $(date +'%Y-%m-%d')"
-          git push

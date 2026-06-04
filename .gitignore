@@ -1,5 +1,6 @@
 venv/
 __pycache__/
 *.pyc
-.envdigest.md
+.env
+digest.md
 summary_cache.json

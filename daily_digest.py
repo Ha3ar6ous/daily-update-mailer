@@ -1,16 +1,19 @@
-"""
-daily_digest.py — Free Daily Tech Briefing Pipeline
-Aggregates RSS feeds from top SE, AI, Cybersecurity, and Tech sources.
-Ranks by recency + source quality, generates a clean Markdown digest.
+﻿"""
+daily_digest.py — Personalized daily tech briefing for a software engineer.
+Aggregates high-signal feeds, ranks important stories, and adds a concise
+LLM-generated explanation for each selected item.
 """
 
-import feedparser
 import datetime
+import hashlib
 import os
 import re
-import hashlib
-from dateutil import parser as dateparser
 from collections import defaultdict
+
+import feedparser
+from dateutil import parser as dateparser
+
+from llm_summary import explain_article
 
 # ─────────────────────────────────────────────
 #  SOURCE CONFIGURATION
@@ -20,59 +23,69 @@ from collections import defaultdict
 
 SOURCES = {
     "⚙️ Software Engineering": [
-        ("https://news.ycombinator.com/rss",              "Hacker News",        5),
-        ("https://rss.reddit.com/r/programming/.rss",     "r/programming",      4),
-        ("https://rss.reddit.com/r/devops/.rss",          "r/devops",           3),
-        ("https://rss.reddit.com/r/sre/.rss",             "r/sre",              3),
-        ("https://rss.reddit.com/r/golang/.rss",          "r/golang",           3),
-        ("https://rss.reddit.com/r/rust/.rss",            "r/rust",             3),
-        ("https://stackoverflow.blog/feed/",              "Stack Overflow Blog",4),
-        ("https://engineering.fb.com/feed/",              "Meta Engineering",   4),
-        ("https://netflixtechblog.com/feed",              "Netflix Tech Blog",  4),
-        ("https://slack.engineering/feed",                "Slack Engineering",  4),
+        ("https://news.ycombinator.com/rss", "Hacker News", 5),
+        ("https://rss.reddit.com/r/programming/.rss", "r/programming", 4),
+        ("https://infoq.com/feed/", "InfoQ", 5),
+        ("https://dev.to/feed", "DEV Community", 4),
+        ("https://stackoverflow.blog/feed/", "Stack Overflow Blog", 4),
+        ("https://github.blog/feed/", "GitHub Blog", 4),
+        ("https://aws.amazon.com/blogs/aws/feed/", "AWS News Blog", 4),
+        ("https://devblogs.microsoft.com/azure/feed/", "Microsoft Azure Blog", 4),
+        ("https://cloud.google.com/blog/rss.xml", "Google Cloud Blog", 4),
+        ("https://netflixtechblog.com/feed", "Netflix Tech Blog", 4),
     ],
     "🤖 AI & Machine Learning": [
-        ("https://arxiv.org/rss/cs.AI",                   "arXiv cs.AI",        5),
-        ("https://arxiv.org/rss/cs.LG",                   "arXiv cs.LG",        5),
-        ("https://arxiv.org/rss/cs.SE",                   "arXiv cs.SE",        5),
-        ("https://rss.reddit.com/r/MachineLearning/.rss", "r/MachineLearning",  4),
-        ("https://rss.reddit.com/r/LocalLLaMA/.rss",      "r/LocalLLaMA",       4),
-        ("https://rss.reddit.com/r/mlops/.rss",           "r/MLOps",            3),
-        ("https://huggingface.co/blog/feed",              "HuggingFace Blog",   5),
-        ("https://bair.berkeley.edu/blog/feed.xml",       "BAIR Blog",          5),
-        ("https://ai.googleblog.com/atom.xml",            "Google AI Blog",     5),
-    ],
-    "🔐 Cybersecurity": [
-        ("https://krebsonsecurity.com/feed/",             "Krebs on Security",  5),
-        ("https://www.schneier.com/blog/feed/",           "Schneier on Security",5),
-        ("https://www.bleepingcomputer.com/feed/",        "BleepingComputer",   4),
-        ("https://rss.reddit.com/r/cybersecurity/.rss",   "r/cybersecurity",    4),
-        ("https://rss.reddit.com/r/netsec/.rss",          "r/netsec",           5),
-        ("https://feeds.feedburner.com/TheHackersNews",   "The Hacker News",    4),
-        ("https://www.darkreading.com/rss.xml",           "Dark Reading",       4),
-        ("https://isc.sans.edu/rssfeed_full.xml",         "SANS ISC",           5),
+        ("https://arxiv.org/rss/cs.AI", "arXiv cs.AI", 5),
+        ("https://arxiv.org/rss/cs.LG", "arXiv cs.LG", 5),
+        ("https://arxiv.org/rss/cs.SE", "arXiv cs.SE", 5),
+        ("https://rss.reddit.com/r/MachineLearning/.rss", "r/MachineLearning", 4),
+        ("https://rss.reddit.com/r/LocalLLaMA/.rss", "r/LocalLLaMA", 4),
+        ("https://rss.reddit.com/r/mlops/.rss", "r/MLOps", 4),
+        ("https://huggingface.co/blog/feed", "HuggingFace Blog", 5),
+        ("https://bair.berkeley.edu/blog/feed.xml", "BAIR Blog", 5),
+        ("https://ai.googleblog.com/atom.xml", "Google AI Blog", 5),
+        ("https://openai.com/blog/rss/", "OpenAI Blog", 5),
     ],
     "🌐 General Tech & Shifts": [
-        ("https://arstechnica.com/feed/",                 "Ars Technica",       5),
-        ("https://www.theverge.com/rss/index.xml",        "The Verge",          4),
-        ("https://techcrunch.com/feed/",                  "TechCrunch",         4),
-        ("https://rss.reddit.com/r/technology/.rss",      "r/technology",       3),
-        ("https://feeds.wired.com/wired/index",           "Wired",              4),
-        ("https://www.technologyreview.com/feed/",        "MIT Tech Review",    5),
+        ("https://arstechnica.com/feed/", "Ars Technica", 5),
+        ("https://www.theverge.com/rss/index.xml", "The Verge", 4),
+        ("https://techcrunch.com/feed/", "TechCrunch", 4),
+        ("https://rss.reddit.com/r/technology/.rss", "r/technology", 3),
+        ("https://feeds.wired.com/wired/index", "Wired", 4),
+        ("https://www.technologyreview.com/feed/", "MIT Tech Review", 5),
+        ("https://www.bloomberg.com/technology/rss", "Bloomberg Technology", 4),
+        ("https://www.fastcompany.com/section/tech/feed", "Fast Company Tech", 3),
+        ("https://www.theregister.com/headlines.rss", "The Register", 4),
+        ("https://www.darkreading.com/rss.xml", "Dark Reading", 4),
     ],
 }
 
 # ─────────────────────────────────────────────
-#  KEYWORD BOOSTS — articles with these get +1 score
+#  KEYWORD BOOSTS
 # ─────────────────────────────────────────────
 
 HIGH_VALUE_KEYWORDS = [
-    "vulnerability", "exploit", "breach", "zero-day", "CVE",
-    "LLM", "GPT", "agent", "open source", "release", "benchmark",
-    "performance", "architecture", "kubernetes", "rust", "golang",
-    "distributed", "database", "compiler", "security", "AI",
-    "announced", "launched", "critical", "emergency", "update",
-    "outage", "incident", "postmortem", "redesign", "migration"
+    "LLM", "GPT", "AI", "machine learning", "deep learning", "agent",
+    "benchmark", "performance", "architecture", "scaling", "cloud",
+    "kubernetes", "microservices", "observability", "rust", "golang",
+    "open source", "release", "security", "privacy", "regulation",
+    "incident", "outage", "migration", "upgrade", "compliance",
+    "productivity", "developer experience", "automation",
+]
+
+# ─────────────────────────────────────────────
+#  CONFIGURATION
+# ─────────────────────────────────────────────
+
+MAX_AGE_HOURS = int(os.environ.get("MAX_AGE_HOURS", 42))
+HIGHLIGHT_COUNT = int(os.environ.get("HIGHLIGHT_COUNT", 4))
+CATEGORY_COUNT = int(os.environ.get("CATEGORY_COUNT", 4))
+MIN_ACCEPTED_SCORE = float(os.environ.get("MIN_ACCEPTED_SCORE", 8.8))
+
+CATEGORY_ORDER = [
+    "⚙️ Software Engineering",
+    "🤖 AI & Machine Learning",
+    "🌐 General Tech & Shifts",
 ]
 
 # ─────────────────────────────────────────────
@@ -80,51 +93,71 @@ HIGH_VALUE_KEYWORDS = [
 # ─────────────────────────────────────────────
 
 def clean_html(text: str) -> str:
-    """Strip HTML tags and normalize whitespace."""
-    text = re.sub(r'<[^>]+>', ' ', text or '')
-    text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r"<[^>]+>", " ", text or "")
+    text = re.sub(r"\s+", " ", text).strip()
     return text
 
+
 def parse_date(entry) -> datetime.datetime:
-    """Try multiple date fields to get publish time."""
-    for field in ('published', 'updated', 'created'):
+    for field in ("published", "updated", "created"):
         val = entry.get(field)
         if val:
             try:
                 return dateparser.parse(val)
             except Exception:
                 pass
+
+    parsed = entry.get("published_parsed") or entry.get("updated_parsed")
+    if parsed:
+        try:
+            return datetime.datetime.fromtimestamp(
+                datetime.datetime(*parsed[:6]).timestamp(),
+                tz=datetime.timezone.utc,
+            )
+        except Exception:
+            pass
+
     return datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2)
+
 
 def hours_ago(dt: datetime.datetime) -> float:
     now = datetime.datetime.now(datetime.timezone.utc)
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=datetime.timezone.utc)
-    return (now - dt).total_seconds() / 3600
+    return (now - dt).total_seconds() / 3600.0
 
-def keyword_score(title: str, summary: str) -> int:
+
+def keyword_score(title: str, summary: str) -> float:
     text = (title + " " + summary).lower()
-    return sum(1 for kw in HIGH_VALUE_KEYWORDS if kw.lower() in text)
+    return sum(1 for keyword in HIGH_VALUE_KEYWORDS if keyword.lower() in text)
+
 
 def deduplicate(articles: list) -> list:
-    """Remove near-duplicate titles using simple hash on normalized title."""
     seen = set()
     unique = []
-    for a in articles:
-        key = hashlib.md5(
-            re.sub(r'\W+', '', a['title'].lower()).encode()
-        ).hexdigest()[:12]
+    for article in articles:
+        fingerprint = re.sub(r"\W+", "", (article["title"] + article["link"]).lower())
+        key = hashlib.sha256(fingerprint.encode()).hexdigest()[:18]
         if key not in seen:
             seen.add(key)
-            unique.append(a)
+            unique.append(article)
     return unique
+
 
 # ─────────────────────────────────────────────
 #  CORE PIPELINE
 # ─────────────────────────────────────────────
 
-def fetch_all_feeds(max_age_hours: int = 36) -> list:
-    """Fetch all feeds, filter to recent articles."""
+
+def score_article(title: str, summary: str, quality: int, age_hours: float) -> float:
+    source_score = float(quality) * 1.8
+    recency_score = 6.0 * (2.718281828459045 ** (-age_hours / 18.0))
+    kw_score = keyword_score(title, summary) * 1.4
+    richness_bonus = min(1.5, len(summary) / 210.0)
+    return round(source_score + recency_score + kw_score + richness_bonus, 2)
+
+
+def fetch_all_feeds(max_age_hours: int = MAX_AGE_HOURS) -> list:
     articles = []
     stats = {"fetched": 0, "skipped": 0, "errors": 0}
 
@@ -132,167 +165,145 @@ def fetch_all_feeds(max_age_hours: int = 36) -> list:
         for url, source_name, quality in feeds:
             try:
                 feed = feedparser.parse(url, request_headers={
-                    'User-Agent': 'TechDigestBot/1.0 (+https://github.com)'
+                    "User-Agent": "DailyUpdateMailer/1.0 (+https://github.com)"
                 })
-                fetched_count = 0
-                for entry in feed.entries[:20]:
-                    pub_dt = parse_date(entry)
-                    age = hours_ago(pub_dt)
-
+                for entry in feed.entries[:18]:
+                    published = parse_date(entry)
+                    age = hours_ago(published)
                     if age > max_age_hours:
                         stats["skipped"] += 1
                         continue
 
-                    title = clean_html(entry.get('title', 'No title'))
-                    summary = clean_html(entry.get('summary', entry.get('description', '')))
-                    link = entry.get('link', '#')
+                    title = clean_html(entry.get("title", "No title"))
+                    raw_summary = entry.get("summary", entry.get("description", "")) or ""
+                    summary = clean_html(raw_summary)
+                    link = entry.get("link", "#")
 
-                    # Compute composite score
-                    recency_score = max(0, 5 - (age / 8))  # 0–5, decays every 8h
-                    kw_score = keyword_score(title, summary)
-                    total_score = (quality * 1.5) + recency_score + kw_score
-
+                    score = score_article(title, summary, quality, age)
                     articles.append({
-                        'title': title,
-                        'link': link,
-                        'summary': summary[:600],
-                        'category': category,
-                        'source': source_name,
-                        'published': pub_dt,
-                        'score': round(total_score, 2),
-                        'age_hours': round(age, 1),
+                        "title": title,
+                        "link": link,
+                        "summary": summary[:640],
+                        "category": category,
+                        "source": source_name,
+                        "published": published,
+                        "score": score,
+                        "age_hours": round(age, 1),
                     })
-                    fetched_count += 1
                     stats["fetched"] += 1
-
             except Exception as e:
                 stats["errors"] += 1
                 print(f"  [WARN] Failed to fetch {source_name}: {e}")
 
-    print(f"\n📊 Feed stats: {stats['fetched']} articles fetched, "
-          f"{stats['skipped']} too old, {stats['errors']} feed errors")
+    print(f"\n📊 Feed stats: {stats['fetched']} fetched, {stats['skipped']} skipped, {stats['errors']} errors")
     return articles
 
-def select_top_articles(articles: list, per_category: int = 5, global_top: int = 3) -> dict:
-    """
-    Returns a dict with:
-      - 'highlights': top N articles across ALL categories
-      - per-category lists
-    """
+
+def select_top_articles(articles: list, per_category: int = CATEGORY_COUNT, global_top: int = HIGHLIGHT_COUNT) -> dict:
     deduped = deduplicate(articles)
-    deduped.sort(key=lambda x: x['score'], reverse=True)
+    deduped.sort(key=lambda item: item["score"], reverse=True)
 
-    highlights = deduped[:global_top]
+    accepted = [item for item in deduped if item["score"] >= MIN_ACCEPTED_SCORE]
+    if not accepted:
+        accepted = deduped[: max(global_top, per_category * len(CATEGORY_ORDER))]
+
+    highlights = accepted[:global_top]
     by_category = defaultdict(list)
-
-    for a in deduped:
-        cat = a['category']
-        if len(by_category[cat]) < per_category:
-            by_category[cat].append(a)
+    for article in accepted:
+        if len(by_category[article["category"]]) < per_category:
+            by_category[article["category"]].append(article)
 
     return {
-        'highlights': highlights,
-        'by_category': dict(by_category),
-        'total_collected': len(deduped),
+        "highlights": highlights,
+        "by_category": {category: by_category.get(category, []) for category in CATEGORY_ORDER},
+        "total_collected": len(accepted),
     }
 
-# ─────────────────────────────────────────────
-#  DIGEST GENERATION
-# ─────────────────────────────────────────────
 
-def format_article(article: dict, index: int = None, show_score: bool = False) -> str:
-    """Format a single article as Markdown."""
-    idx_str = f"**{index}.** " if index else "- "
-    age_str = f"{article['age_hours']}h ago"
-    score_str = f" · score: {article['score']}" if show_score else ""
+def attach_explanations(data: dict) -> None:
+    for article in data.get("highlights", []) + [item for group in data.get("by_category", {}).values() for item in group]:
+        article["llm_summary"] = explain_article(article)
+
+
+def format_article(article: dict, index: int = None) -> str:
+    prefix = f"**{index}.** " if index is not None else "- "
+    published_ts = article["published"].strftime("%Y-%m-%d %H:%M UTC")
 
     lines = [
-        f"{idx_str}**[{article['title']}]({article['link']})**",
-        f"  `{article['source']}` · {age_str}{score_str}",
+        f"{prefix}**[{article['title']}]({article['link']})**",
+        f"*{article['source']} · {published_ts} · {article['age_hours']}h ago*",
     ]
-    if article['summary']:
-        truncated = article['summary'][:280]
-        if len(article['summary']) > 280:
-            truncated += "…"
-        lines.append(f"  {truncated}")
+
+    if article.get("summary"):
+        summary_text = article["summary"].replace("\n", " ").strip()
+        lines.append(f"{summary_text[:220].rstrip()}…")
+
+    if article.get("llm_summary"):
+        lines.append(f"**Relevant Explanation:** {article['llm_summary']}")
+
     lines.append("")
     return "\n".join(lines)
 
+
 def generate_digest(data: dict) -> str:
     today = datetime.date.today()
-    weekday = today.strftime("%A")
     date_str = today.strftime("%B %d, %Y")
-
-    md = []
-    md.append(f"# 🌅 Tech Digest — {weekday}, {date_str}")
-    md.append(f"\n> Auto-generated daily briefing · {data['total_collected']} articles collected\n")
-    md.append("---\n")
-
-    # ── Top Highlights ──────────────────────────────────────────
-    md.append("## 🔥 Top Highlights\n")
-    md.append("> The highest-signal stories across all categories today.\n")
-    for i, article in enumerate(data['highlights'], 1):
-        md.append(f"**{i}. [{article['title']}]({article['link']})**")
-        md.append(f"*{article['category']} · {article['source']} · {article['age_hours']}h ago*")
-        if article['summary']:
-            md.append(f"\n{article['summary'][:320]}…\n")
-        md.append("")
-
-    md.append("---\n")
-
-    # ── Per-Category Sections ────────────────────────────────────
-    category_order = [
-        "⚙️ Software Engineering",
-        "🤖 AI & Machine Learning",
-        "🔐 Cybersecurity",
-        "🌐 General Tech & Shifts",
+    lines = [
+        f"# Daily Update Mailer — {date_str}",
+        "> Daily briefing optimized for a software engineer seeking competitive tech advantage.",
+        "---",
+        "",
+        "## Executive Highlights",
+        "The top stories selected for maximum professional impact.",
+        "",
     ]
 
-    for cat in category_order:
-        articles = data['by_category'].get(cat, [])
+    for index, article in enumerate(data["highlights"], start=1):
+        lines.append(format_article(article, index=index))
+
+    lines.append("---")
+    lines.append("")
+
+    for category in CATEGORY_ORDER:
+        articles = data["by_category"].get(category, [])
         if not articles:
             continue
-        md.append(f"## {cat}\n")
-        for i, article in enumerate(articles, 1):
-            md.append(format_article(article, index=i))
+        lines.append(f"## {category}")
+        lines.append("")
+        for index, article in enumerate(articles, start=1):
+            lines.append(format_article(article, index=index))
+        lines.append("---")
+        lines.append("")
 
-        md.append("---\n")
+    lines.append(
+        f"*Generated at {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')} · "
+        f"Sources: {sum(len(v) for v in SOURCES.values())} feeds across {len(CATEGORY_ORDER)} categories.*"
+    )
+    return "\n".join(lines)
 
-    # ── Footer ───────────────────────────────────────────────────
-    md.append(f"\n*Generated at {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')} · "
-              f"Sources: {sum(len(v) for v in SOURCES.values())} feeds across 4 categories*")
 
-    return "\n".join(md)
-
-# ─────────────────────────────────────────────
-#  ENTRY POINT
-# ─────────────────────────────────────────────
-
-def main():
-    print("🚀 Starting Tech Digest Pipeline...")
+def main() -> None:
+    print("🚀 Starting Daily Update Mailer...")
     print(f"📅 Date: {datetime.date.today()}")
-    print(f"📡 Configured sources: {sum(len(v) for v in SOURCES.values())} feeds\n")
+    print(f"📡 Feeds configured: {sum(len(v) for v in SOURCES.values())}")
 
-    articles = fetch_all_feeds(max_age_hours=36)
-
+    articles = fetch_all_feeds()
     if not articles:
-        print("⚠️  No articles fetched. Check your internet connection or feed URLs.")
+        print("⚠️ No articles fetched. Check your internet connection or feed configuration.")
         return
 
-    data = select_top_articles(articles, per_category=5, global_top=3)
+    data = select_top_articles(articles)
+    attach_explanations(data)
     digest = generate_digest(data)
 
-    # Write to file
     output_path = os.environ.get("DIGEST_OUTPUT", "digest.md")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(digest)
+    with open(output_path, "w", encoding="utf-8") as writer:
+        writer.write(digest)
 
     print(f"\n✅ Digest written to {output_path}")
-    print(f"📰 Top highlights: {len(data['highlights'])}")
-    print(f"📂 Categories covered: {list(data['by_category'].keys())}")
-    print("\n--- PREVIEW (first 40 lines) ---")
-    preview_lines = digest.split("\n")[:40]
-    print("\n".join(preview_lines))
+    print(f"📰 Highlights: {len(data['highlights'])} items")
+    print(f"📂 Categories included: {[category for category, items in data['by_category'].items() if items]}")
+
 
 if __name__ == "__main__":
     main()
