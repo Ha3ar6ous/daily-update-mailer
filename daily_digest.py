@@ -232,14 +232,17 @@ def format_article(article: dict, index: int = None) -> str:
     lines = [
         f"{prefix}**[{article['title']}]({article['link']})**",
         f"*{article['source']} · {published_ts} · {article['age_hours']}h ago*",
+        "",
     ]
 
-    if article.get("summary"):
-        summary_text = article["summary"].replace("\n", " ").strip()
-        lines.append(f"{summary_text[:220].rstrip()}…")
-
     if article.get("llm_summary"):
-        lines.append(f"**Relevant Explanation:** {article['llm_summary']}")
+        lines.append(article['llm_summary'])
+    else:
+        summary_text = article.get("summary", "").replace("\n", " ").strip()
+        if summary_text:
+            if len(summary_text) > 420:
+                summary_text = summary_text[:420].rstrip() + "…"
+            lines.append(summary_text)
 
     lines.append("")
     return "\n".join(lines)
@@ -276,7 +279,7 @@ def generate_digest(data: dict) -> str:
         lines.append("")
 
     lines.append(
-        f"*Generated at {datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')} · "
+        f"*Generated at {datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} · "
         f"Sources: {sum(len(v) for v in SOURCES.values())} feeds across {len(CATEGORY_ORDER)} categories.*"
     )
     return "\n".join(lines)

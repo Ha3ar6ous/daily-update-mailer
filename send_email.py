@@ -66,61 +66,117 @@ def build_email_html(digest_md: str) -> str:
     body {{
       margin: 0;
       padding: 0;
-      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background-color: #eef2f7;
-      color: #182026;
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f5f7fa;
+      color: #1f2937;
     }}
     .wrapper {{
       width: 100%;
-      padding: 24px 0;
+      padding: 16px;
     }}
     .container {{
-      max-width: 760px;
+      max-width: 800px;
       margin: 0 auto;
       background-color: #ffffff;
-      border-radius: 18px;
-      box-shadow: 0 24px 64px rgba(15, 23, 42, 0.12);
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
       overflow: hidden;
     }}
     .header {{
-      padding: 32px 40px 20px;
-      background: linear-gradient(135deg, #1f67ff 0%, #47b5ff 100%);
+      padding: 40px 36px 28px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
       color: #ffffff;
+      border-bottom: 6px solid #1e40af;
     }}
     .header h1 {{
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: -0.03em;
+      margin: 0 0 8px;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
     }}
     .header p {{
-      margin: 12px 0 0;
-      color: rgba(255, 255, 255, 0.88);
-      font-size: 15px;
-      line-height: 1.6;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      line-height: 1.5;
     }}
     .content {{
-      padding: 32px 40px 40px;
-      line-height: 1.7;
+      padding: 36px;
+      line-height: 1.8;
     }}
-    h1 {{
-      color: #102a43;
-      font-size: 24px;
-      margin: 24px 0 12px;
+    .section {{
+      margin-bottom: 32px;
     }}
-    h2 {{
+    .section h2 {{
       color: #0f172a;
-      font-size: 19px;
-      margin: 20px 0 8px;
-      border-left: 4px solid #1f67ff;
-      padding-left: 12px;
+      font-size: 21px;
+      font-weight: 700;
+      margin: 0 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #3b82f6;
     }}
-    p {{
-      color: #334155;
-      margin: 10px 0;
-      font-size: 15px;
+    .article-item {{
+      background: #f8fafc;
+      border-left: 4px solid #3b82f6;
+      padding: 20px;
+      margin-bottom: 18px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }}
+    .article-item:hover {{
+      background: #f0f4f8;
+      border-left-color: #1e40af;
+    }}
+    .article-number {{
+      display: inline-block;
+      background: #3b82f6;
+      color: #ffffff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-right: 10px;
+    }}
+    .article-title {{
+      display: inline;
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+    }}
+    .article-title a {{
+      color: #1e3a8a;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: border 0.2s ease;
+    }}
+    .article-title a:hover {{
+      border-bottom: 2px solid #3b82f6;
+    }}
+    .article-meta {{
+      margin-top: 8px;
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+    }}
+    .article-meta span {{
+      margin-right: 16px;
+    }}
+    .article-summary {{
+      margin-top: 12px;
+      padding: 12px 0 0;
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+    }}
+    strong {{
+      color: #1f2937;
+      font-weight: 600;
     }}
     a {{
-      color: #1f67ff;
+      color: #1e3a8a;
       text-decoration: none;
     }}
     a:hover {{
@@ -128,28 +184,32 @@ def build_email_html(digest_md: str) -> str:
     }}
     hr {{
       border: none;
-      border-top: 1px solid #d9e2ec;
+      border-top: 1px solid #e5e7eb;
       margin: 28px 0;
     }}
     blockquote {{
-      margin: 0 0 18px;
-      padding: 16px 20px;
-      border-left: 4px solid #1f67ff;
-      background-color: #f0f4ff;
-      color: #475569;
+      margin: 0 0 20px;
+      padding: 12px 16px;
+      border-left: 4px solid #3b82f6;
+      background-color: #eff6ff;
+      color: #1e3a8a;
       font-style: italic;
+      font-size: 14px;
     }}
     code {{
-      background: #f1f5f9;
+      background: #f3f4f6;
       padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Courier New', monospace;
       font-size: 13px;
+      color: #374151;
     }}
     .footer {{
-      margin-top: 30px;
-      font-size: 13px;
-      color: #667085;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 12px;
+      color: #6b7280;
       text-align: center;
     }}
   </style>
@@ -158,14 +218,15 @@ def build_email_html(digest_md: str) -> str:
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <h1>Tech Digest</h1>
-        <p>Curated morning briefing for software engineers. Insights, context, and impact in one concise note.</p>
+        <h1>📰 Tech Digest</h1>
+        <p>Enterprise-grade intelligence briefing for software engineering leaders. Curated insights from 30+ premium sources.</p>
       </div>
       <div class="content">
 {body_html}
       </div>
       <div class="footer">
-        Delivered automatically by GitHub Actions · Update your settings in the workflow if you want to pause delivery.
+        <p>Automated intelligence digest · Delivered by GitHub Actions · Powered by Groq API</p>
+        <p style="margin-top: 8px; font-size: 11px; color: #9ca3af;">Manage your subscription in the GitHub Actions workflow settings if you want to pause or modify delivery.</p>
       </div>
     </div>
   </div>
