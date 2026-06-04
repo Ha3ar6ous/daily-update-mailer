@@ -15,6 +15,7 @@ def md_to_html(md: str) -> str:
     lines = md.splitlines()
     html_lines = []
     in_blockquote = False
+    in_article = False
 
     for line in lines:
         if line.startswith("> "):
@@ -33,6 +34,20 @@ def md_to_html(md: str) -> str:
             html_lines.append(f"<h2>{line[3:].strip()}</h2>")
         elif line.strip() == "---":
             html_lines.append("<hr />")
+        elif line.startswith("**") and line.endswith("**"):
+            # Bold line, likely a title
+            text = line[2:-2]
+            text = re.sub(r"\[\*\*(.+?)\*\*\]\((.+?)\)", r"<a href=\"\2\"><strong>\1</strong></a>", text)
+            text = re.sub(r"\[(.+?)\]\((.+?)\)", r"<a href=\"\2\">\1</a>", text)
+            html_lines.append(f"<p><strong>{text}</strong></p>")
+        elif line.startswith("🔴 ") or line.startswith("🟡 ") or line.startswith("🟢 "):
+            # Impact and tag line
+            impact_tag = line.strip()
+            html_lines.append(f'<p style="font-size: 12px; color: #666; margin: 8px 0; font-weight: 500;">{impact_tag}</p>')
+        elif line.startswith("  •"):
+            # Bullet point
+            text = line[3:].strip()
+            html_lines.append(f"<p style=\"margin: 6px 0 6px 24px; font-size: 13px;\">• {text}</p>")
         else:
             text = line
             # Process patterns in order: links first, then bold, then italic

@@ -13,7 +13,7 @@ from collections import defaultdict
 import feedparser
 from dateutil import parser as dateparser
 
-from llm_summary import explain_article
+from llm_summary import explain_article, extract_article_structure
 
 # ─────────────────────────────────────────────
 #  SOURCE CONFIGURATION
@@ -78,8 +78,8 @@ HIGH_VALUE_KEYWORDS = [
 # ─────────────────────────────────────────────
 
 MAX_AGE_HOURS = int(os.environ.get("MAX_AGE_HOURS", 42))
-HIGHLIGHT_COUNT = int(os.environ.get("HIGHLIGHT_COUNT", 4))
-CATEGORY_COUNT = int(os.environ.get("CATEGORY_COUNT", 4))
+HIGHLIGHT_COUNT = int(os.environ.get("HIGHLIGHT_COUNT", 3))
+CATEGORY_COUNT = int(os.environ.get("CATEGORY_COUNT", 3))
 MIN_ACCEPTED_SCORE = float(os.environ.get("MIN_ACCEPTED_SCORE", 8.8))
 
 CATEGORY_ORDER = [
@@ -222,7 +222,9 @@ def select_top_articles(articles: list, per_category: int = CATEGORY_COUNT, glob
 
 def attach_explanations(data: dict) -> None:
     for article in data.get("highlights", []) + [item for group in data.get("by_category", {}).values() for item in group]:
-        article["llm_summary"] = explain_article(article)
+        structure = extract_article_structure(article)
+        article["structure"] = structure
+        article["llm_summary"] = structure.get("summary", "")
 
 
 def format_article(article: dict, index: int = None) -> str:
@@ -231,13 +233,29 @@ def format_article(article: dict, index: int = None) -> str:
 
     lines = [
         f"{prefix}[**{article['title']}**]({article['link']})",
-        f"*{article['source']} · {published_ts} · {article['age_hours']}h ago*",
-        "",
+        f"*{article['source']} · {published_ts}*",
     ]
 
-    summary_text = article.get("llm_summary") or article.get("summary", "").replace("\n", " ").strip()
-    if summary_text:
-        lines.append(summary_text)
+    structure = article.get("structure", {})
+    if structure:
+        impact = structure.get("impact_level", "MEDIUM")
+        tag = structure.get("category_tag", "TOOL")
+        lines.append(f"🔴 {impact} · 🏷️ {tag}")
+        
+        summary = structure.get("summary", "")
+        if summary:
+            lines.append(f"  {summary}")
+        
+        takeaways = structure.get("key_takeaways", [])
+        if takeaways:
+            for takeaway in takeaways[:2]:
+                lines.append(f"  • {takeaway}")
+    else:
+        summary_text = article.get("llm_summary") or article.get("summary", "").replace("\n", " ").strip()
+        if summary_text:
+            if len(summary_text) > 400:
+                summary_text = summary_text[:400].rstrip() + "…"
+            lines.append(f"  {summary_text}")
 
     lines.append("")
     return "\n".join(lines)
