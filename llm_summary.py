@@ -11,8 +11,8 @@ except ImportError:
 
 CACHE_PATH = Path(__file__).with_name("summary_cache.json")
 API_KEY = os.environ.get("GROQ_API_KEY")
-MODEL_NAME = os.environ.get("GROQ_MODEL", "groq-llama2-mini")
-BASE_URL = os.environ.get("GROQ_API_URL", f"https://api.groq.com/v1/models/{MODEL_NAME}/outputs")
+MODEL_NAME = os.environ.get("GROQ_MODEL", "llama3-8b-8192")
+BASE_URL = os.environ.get("GROQ_API_URL", "https://api.groq.com/openai/v1/chat/completions")
 
 
 def _load_cache() -> dict:
@@ -65,30 +65,23 @@ def _call_groq(prompt: str) -> str:
             "Content-Type": "application/json",
         }
         payload = {
-            "input": prompt,
-            "max_output_tokens": 350,
+            "model": MODEL_NAME,
+            "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.1,
+            "max_tokens": 350,
+            "response_format": {"type": "json_object"}
         }
         with httpx.Client(timeout=45.0) as client:
             response = client.post(BASE_URL, headers=headers, json=payload)
             if response.status_code != 200:
+                print(f"GROQ API ERROR: {response.status_code} - {response.text}")
                 return ""
             data = response.json()
 
-        if isinstance(data, dict):
-            if "outputs" in data and data["outputs"]:
-                output = data["outputs"][0]
-                content = output.get("content")
-                if isinstance(content, list):
-                    return "".join(content).strip()
-                elif isinstance(content, str):
-                    return content.strip()
-            if "output" in data and data["output"]:
-                return str(data["output"]).strip()
-            if "text" in data and data["text"]:
-                return str(data["text"]).strip()
-    except Exception:
-        pass
+        if "choices" in data and len(data["choices"]) > 0:
+            return data["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        print(f"GROQ Exception: {e}")
     return ""
 
 
