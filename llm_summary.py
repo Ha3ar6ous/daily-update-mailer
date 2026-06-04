@@ -38,20 +38,20 @@ def _cache_key(article: dict) -> str:
 
 def _build_extraction_prompt(article: dict) -> str:
     source_summary = article.get('summary', '').strip()
-    if len(source_summary) > 800:
-        source_summary = source_summary[:800] + "..."
+    if len(source_summary) > 3000:
+        source_summary = source_summary[:3000] + "..."
     return (
-        "You are a professional tech news editor. Extract structured data for a software engineer newsletter.\n\n"
-        "RESPOND IN VALID JSON ONLY (no markdown, no extra text):\n"
+        "You are an expert software engineer and technical writer. Read the following article summary and extract the core information into a highly standardized JSON format.\n\n"
+        "Rules:\n"
+        "1. 'summary': Write exactly 3 sentences explaining what this is and why a Software Engineer should care. Keep it punchy, readable, and uniform in size.\n"
+        "2. 'key_takeaways': Provide exactly 3 bullet points explaining the core technical details, mechanisms, or architecture. Do not overlook technical depth.\n\n"
+        "RESPOND IN VALID JSON ONLY:\n"
         "{\n"
-        '  "summary": "2-3 sentences, max 380 chars. What happened and why SWEs should care.",\n'
-        '  "key_takeaways": ["takeaway 1", "takeaway 2"],\n'
-        '  "impact_level": "HIGH or MEDIUM or LOW",\n'
-        '  "category_tag": "FEATURE|RESEARCH|INCIDENT|TOOL|SECURITY|PERFORMANCE"\n'
+        '  "summary": "3 sentences summarizing the article...",\n'
+        '  "key_takeaways": ["Technical detail 1", "Technical detail 2", "Technical detail 3"]\n'
         "}\n\n"
         f"Title: {article['title']}\n"
-        f"Summary: {source_summary}\n\n"
-        "Be factual. Extract, do not invent."
+        f"Summary: {source_summary}\n"
     )
 
 

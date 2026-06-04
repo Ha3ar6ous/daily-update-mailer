@@ -1,4 +1,4 @@
-﻿"""
+"""
 daily_digest.py — Personalized daily tech briefing for a software engineer.
 Aggregates high-signal feeds, ranks important stories, and adds a concise
 LLM-generated explanation for each selected item.
@@ -199,69 +199,48 @@ def fetch_all_feeds(max_age_hours: int = MAX_AGE_HOURS) -> list:
     return articles
 
 
-def select_top_articles(articles: list, per_category: int = CATEGORY_COUNT, global_top: int = HIGHLIGHT_COUNT) -> dict:
+def select_top_articles(articles: list, top_k: int = 10) -> list:
     deduped = deduplicate(articles)
     deduped.sort(key=lambda item: item["score"], reverse=True)
-
-    accepted = [item for item in deduped if item["score"] >= MIN_ACCEPTED_SCORE]
-    if not accepted:
-        accepted = deduped[: max(global_top, per_category * len(CATEGORY_ORDER))]
-
-    highlights = accepted[:global_top]
-    by_category = defaultdict(list)
-    for article in accepted:
-        if len(by_category[article["category"]]) < per_category:
-            by_category[article["category"]].append(article)
-
-    return {
-        "highlights": highlights,
-        "by_category": {category: by_category.get(category, []) for category in CATEGORY_ORDER},
-        "total_collected": len(accepted),
-    }
+    return deduped[:top_k]
 
 
-def attach_explanations(data: dict) -> None:
-    for article in data.get("highlights", []) + [item for group in data.get("by_category", {}).values() for item in group]:
+def attach_explanations(articles: list) -> None:
+    for article in articles:
         structure = extract_article_structure(article)
         article["structure"] = structure
         article["llm_summary"] = structure.get("summary", "")
 
 
-def format_article(article: dict, index: int = None) -> str:
-    prefix = f"**{index}.** " if index is not None else "- "
-    published_ts = article["published"].strftime("%Y-%m-%d %H:%M UTC")
-
+def format_article(article: dict, index: int) -> str:
+    published_ts = article["published"].strftime("%B %d, %Y")
+    
     lines = [
-        f"{prefix}[**{article['title']}**]({article['link']})",
-        f"*{article['source']} · {published_ts}*",
+        f"**{index}. [{article['title']}]({article['link']})**",
+        f"**Date:** {published_ts} | **Source:** {article['source']}",
+        ""
     ]
 
     structure = article.get("structure", {})
-    if structure:
-        impact = structure.get("impact_level", "MEDIUM")
-        tag = structure.get("category_tag", "TOOL")
-        lines.append(f"🔴 {impact} · 🏷️ {tag}")
+    summary = structure.get("summary", article.get("summary", "").replace("\n", " ").strip())
+    
+    if summary:
+        if len(summary) > 500 and not structure:
+            summary = summary[:500] + "..."
+        lines.append(f"**Summary:** {summary}")
+        lines.append("")
         
-        summary = structure.get("summary", "")
-        if summary:
-            lines.append(f"  {summary}")
-        
-        takeaways = structure.get("key_takeaways", [])
-        if takeaways:
-            for takeaway in takeaways[:2]:
-                lines.append(f"  • {takeaway}")
-    else:
-        summary_text = article.get("llm_summary") or article.get("summary", "").replace("\n", " ").strip()
-        if summary_text:
-            if len(summary_text) > 400:
-                summary_text = summary_text[:400].rstrip() + "…"
-            lines.append(f"  {summary_text}")
-
+    takeaways = structure.get("key_takeaways", [])
+    if takeaways:
+        lines.append("**Core Technical Details:**")
+        for takeaway in takeaways:
+            lines.append(f"• {takeaway}")
+            
     lines.append("")
     return "\n".join(lines)
 
 
-def generate_digest(data: dict) -> str:
+def generate_digest(articles: list) -> str:
     today = datetime.date.today()
     date_str = today.strftime("%B %d, %Y")
     lines = [
@@ -269,31 +248,17 @@ def generate_digest(data: dict) -> str:
         "> Daily briefing optimized for a software engineer seeking competitive tech advantage.",
         "---",
         "",
-        "## Executive Highlights",
-        "The top stories selected for maximum professional impact.",
+        "## Top 10 Tech Updates",
         "",
     ]
 
-    for index, article in enumerate(data["highlights"], start=1):
+    for index, article in enumerate(articles, start=1):
         lines.append(format_article(article, index=index))
-
-    lines.append("---")
-    lines.append("")
-
-    for category in CATEGORY_ORDER:
-        articles = data["by_category"].get(category, [])
-        if not articles:
-            continue
-        lines.append(f"## {category}")
-        lines.append("")
-        for index, article in enumerate(articles, start=1):
-            lines.append(format_article(article, index=index))
         lines.append("---")
         lines.append("")
 
     lines.append(
-        f"*Generated at {datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} · "
-        f"Sources: {sum(len(v) for v in SOURCES.values())} feeds across {len(CATEGORY_ORDER)} categories.*"
+        f"*Generated at {datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}*"
     )
     return "\n".join(lines)
 
@@ -308,17 +273,16 @@ def main() -> None:
         print("⚠️ No articles fetched. Check your internet connection or feed configuration.")
         return
 
-    data = select_top_articles(articles)
-    attach_explanations(data)
-    digest = generate_digest(data)
+    top_10 = select_top_articles(articles)
+    attach_explanations(top_10)
+    digest = generate_digest(top_10)
 
     output_path = os.environ.get("DIGEST_OUTPUT", "digest.md")
     with open(output_path, "w", encoding="utf-8") as writer:
         writer.write(digest)
 
     print(f"\n✅ Digest written to {output_path}")
-    print(f"📰 Highlights: {len(data['highlights'])} items")
-    print(f"📂 Categories included: {[category for category, items in data['by_category'].items() if items]}")
+    print(f"📰 Included {len(top_10)} articles in digest")
 
 
 if __name__ == "__main__":
