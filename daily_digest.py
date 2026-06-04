@@ -216,7 +216,7 @@ def format_article(article: dict, index: int) -> str:
     published_ts = article["published"].strftime("%B %d, %Y")
     
     lines = [
-        f"**{index}. [{article['title']}]({article['link']})**",
+        f"**{index}.** [**{article['title']}**]({article['link']})",
         f"**Date:** {published_ts} | **Source:** {article['source']}",
         ""
     ]

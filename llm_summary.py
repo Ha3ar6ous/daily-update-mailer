@@ -11,7 +11,7 @@ except ImportError:
 
 CACHE_PATH = Path(__file__).with_name("summary_cache.json")
 API_KEY = os.environ.get("GROQ_API_KEY")
-MODEL_NAME = os.environ.get("GROQ_MODEL", "llama3-8b-8192")
+MODEL_NAME = "llama3-70b-8192" # Hardcoding valid model, ignoring potentially invalid old env vars
 BASE_URL = os.environ.get("GROQ_API_URL", "https://api.groq.com/openai/v1/chat/completions")
 
 
