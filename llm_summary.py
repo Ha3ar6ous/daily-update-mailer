@@ -11,8 +11,8 @@ except ImportError:
 
 CACHE_PATH = Path(__file__).with_name("summary_cache.json")
 API_KEY = os.environ.get("GROQ_API_KEY")
-MODEL_NAME = "llama3-70b-8192" # Hardcoding valid model, ignoring potentially invalid old env vars
-BASE_URL = os.environ.get("GROQ_API_URL", "https://api.groq.com/openai/v1/chat/completions")
+MODEL_NAME = os.environ.get("GROQ_MODEL", "groq-llama2-mini")
+BASE_URL = os.environ.get("GROQ_API_URL", f"https://api.groq.com/v1/models/{MODEL_NAME}/outputs")
 
 
 def _load_cache() -> dict:
@@ -65,11 +65,9 @@ def _call_groq(prompt: str) -> str:
             "Content-Type": "application/json",
         }
         payload = {
-            "model": MODEL_NAME,
-            "messages": [{"role": "user", "content": prompt}],
+            "input": prompt,
+            "max_output_tokens": 350,
             "temperature": 0.1,
-            "max_tokens": 350,
-            "response_format": {"type": "json_object"}
         }
         with httpx.Client(timeout=45.0) as client:
             response = client.post(BASE_URL, headers=headers, json=payload)
@@ -78,20 +76,32 @@ def _call_groq(prompt: str) -> str:
                 return ""
             data = response.json()
 
-        if "choices" in data and len(data["choices"]) > 0:
-            return data["choices"][0]["message"]["content"].strip()
+        if isinstance(data, dict):
+            if "outputs" in data and data["outputs"]:
+                output = data["outputs"][0]
+                content = output.get("content")
+                if isinstance(content, list):
+                    return "".join(content).strip()
+                elif isinstance(content, str):
+                    return content.strip()
+            if "output" in data and data["output"]:
+                return str(data["output"]).strip()
+            if "text" in data and data["text"]:
+                return str(data["text"]).strip()
     except Exception as e:
         print(f"GROQ Exception: {e}")
     return ""
 
 
 def _extract_json(text: str) -> dict:
-    match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', text, re.DOTALL)
-    if match:
-        try:
-            return json.loads(match.group())
-        except Exception:
-            pass
+    try:
+        start_idx = text.find('{')
+        end_idx = text.rfind('}')
+        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+            json_str = text[start_idx:end_idx+1]
+            return json.loads(json_str)
+    except Exception as e:
+        print(f"JSON Parse Error: {e}")
     return {}
 
 
